@@ -31,7 +31,7 @@ def search_parcel(address: str = Query(...)):
         res = requests.get(url, params=params)
         data = res.json()
 
-        # ✅ 올바른 응답 구조 확인
+        # ✅ 정상 구조 체크
         if "response" in data and "result" in data["response"]:
             result = data["response"]["result"][0]
             x = result["point"]["x"]
