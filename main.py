@@ -9,8 +9,8 @@ def root():
 
 @app.get("/api/parcel/search")
 def search_parcel(address: str = Query(...)):
-    api_key = "0F9F83ED-D1D4-3691-A909-51D894078AD6
-"
+    api_key = "0F9F83ED-D1D4-3691-A909-51D894078AD6"
+    
     url = "https://api.vworld.kr/req/address"  # 반드시 HTTPS
 
     params = {
