@@ -1,5 +1,5 @@
-import requests
 from fastapi import FastAPI, Query
+import requests
 
 app = FastAPI()
 
@@ -9,7 +9,7 @@ def root():
 
 @app.get("/api/parcel/search")
 def search_parcel(address: str = Query(...)):
-    api_key = "0F9F83ED-D1D4-3691-A909-51D894078AD6"  # 실제 VWorld API 키
+    api_key = "0F9F83ED-D1D4-3691-A909-51D894078AD6"  # 여기에 너의 키 입력
     url = "https://api.vworld.kr/req/address"
 
     params = {
@@ -29,7 +29,22 @@ def search_parcel(address: str = Query(...)):
 
     try:
         res = requests.get(url, params=params, headers=headers, timeout=10)
-        data = res.json()
-        return data
+
+        # 응답 본문 확인 및 JSON 파싱 처리
+        if res.status_code == 200:
+            try:
+                data = res.json()
+                return data
+            except ValueError:
+                return {
+                    "에러": "응답 본문이 JSON이 아닙니다",
+                    "본문": res.text[:300]
+                }
+        else:
+            return {
+                "에러": f"HTTP 상태 코드 {res.status_code}",
+                "본문": res.text[:300]
+            }
+
     except Exception as e:
         return {"에러": str(e)}
