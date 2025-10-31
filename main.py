@@ -15,7 +15,7 @@ def search_parcel(address: str = Query(...)):
     # ✅ 여기에 네 VWorld API 키 입력
     api_key = "0F9F83ED-D1D4-3691-A909-51D894078AD6"
 
-    url = "http://api.vworld.kr/req/address"
+    url = "https://api.vworld.kr/req/address"
     params = {
         "service": "address",
         "request": "getCoord",
