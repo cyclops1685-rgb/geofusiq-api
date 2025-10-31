@@ -9,8 +9,9 @@ def root():
 
 @app.get("/api/parcel/search")
 def search_parcel(address: str = Query(...)):
-    api_key = "0F9F83ED-D1D4-3691-A909-51D894078AD6"  # 여기에 너의 키 입력
-    url = "https://api.vworld.kr/req/address"
+    api_key = "0F9F83ED-D1D4-3691-A909-51D894078AD6
+"
+    url = "https://api.vworld.kr/req/address"  # 반드시 HTTPS
 
     params = {
         "service": "address",
@@ -23,28 +24,16 @@ def search_parcel(address: str = Query(...)):
         "key": api_key
     }
 
-    headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; GeoFusiQ-Server/1.0)"
-    }
-
     try:
-        res = requests.get(url, params=params, headers=headers, timeout=10)
-
-        # 응답 본문 확인 및 JSON 파싱 처리
+        res = requests.get(url, params=params, timeout=15)
         if res.status_code == 200:
             try:
-                data = res.json()
-                return data
-            except ValueError:
-                return {
-                    "에러": "응답 본문이 JSON이 아닙니다",
-                    "본문": res.text[:300]
-                }
+                return res.json()
+            except Exception:
+                return {"에러": "VWorld 응답이 JSON 형식이 아닙니다", "본문": res.text[:300]}
         else:
-            return {
-                "에러": f"HTTP 상태 코드 {res.status_code}",
-                "본문": res.text[:300]
-            }
-
+            return {"에러": f"HTTP 상태 코드 {res.status_code}", "본문": res.text[:300]}
+    except requests.exceptions.Timeout:
+        return {"에러": "VWorld API 요청 시간이 초과되었습니다 (Timeout)"}
     except Exception as e:
         return {"에러": str(e)}
